@@ -17,7 +17,7 @@ document
       papers.forEach((paper) => {
         const paperElement = document.createElement("div");
         paperElement.className = "dark:bg-gray-800 text-white"; // Add classes here
-        paperElement.style.margin = "10ppx auto";
+        paperElement.style.margin = "10px auto";
 
         const titleElement = document.createElement("h2");
         titleElement.textContent = paper.title;
@@ -48,6 +48,61 @@ document
       document.body.appendChild(papersContainer);
     } catch (error) {
       console.error("Error fetching papers:", error);
+    }
+  });
+
+document
+  .getElementById("summarize-button")
+  .addEventListener("click", async function () {
+    try {
+      const response = await axios.get(
+        "http://localhost:5501/summarize-papers"
+      );
+      const summaries = response.data;
+
+      // Create the parent element where you want to append the summaries
+      const summariesContainer = document.createElement("div");
+      summariesContainer.id = "summaries-container";
+      summariesContainer.className = "dark:bg-gray-900 text-white mx-auto";
+      summariesContainer.style.width = "50%";
+      summariesContainer.style.minWidth = "800px";
+      summariesContainer.style.margin = "0 auto";
+
+      // Create a new element for each summary
+      summaries.forEach((summary) => {
+        const summaryElement = document.createElement("div");
+        summaryElement.className = "dark:bg-gray-800 text-white"; // Add classes here
+        summaryElement.style.margin = "10px auto";
+
+        const titleElement = document.createElement("h2");
+        titleElement.textContent = summary.title;
+        titleElement.className = "dark:text-white"; // Add classes here
+        summaryElement.appendChild(titleElement);
+
+        const authorsElement = document.createElement("p");
+        authorsElement.textContent = summary.authors.join(", ");
+        authorsElement.className = "dark:text-gray-300"; // Add classes here
+        summaryElement.appendChild(authorsElement);
+
+        const AIsummaryElement = document.createElement("p");
+        AIsummaryElement.textContent = summary.AIsummary;
+        AIsummaryElement.className = "dark:text-gray-300"; // Add classes here
+        summaryElement.appendChild(AIsummaryElement);
+
+        const linkElement = document.createElement("a");
+        linkElement.href = summary.link;
+        linkElement.textContent = "Read More";
+        linkElement.className = "dark:text-blue-500"; // Add classes here
+        summaryElement.appendChild(linkElement);
+
+        // Append the summary element to the parent container
+        summariesContainer.appendChild(summaryElement);
+      });
+
+      // Append the container to the body or another existing element
+      document.body.appendChild(summariesContainer);
+    } catch (error) {
+      console.error("Error fetching summaries:", error);
     }
   });
 

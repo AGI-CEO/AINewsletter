@@ -24,7 +24,10 @@ module.exports = async function fetchPapers() {
     const summary = entry.summary[0];
     const link = entry.link.find((link) => link.$.rel === "alternate").$.href;
 
-    return { title, authors, summary, link };
+    // Convert the link to the abstract page into a link to the PDF
+    const pdflink = link.replace("/abs/", "/pdf/") + ".pdf";
+
+    return { title, authors, summary, link, pdflink };
   });
 
   return papers;
