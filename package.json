@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.17.1",
+    "langchain": "^0.0.155",
     "node-cron": "^3.0.0",
     "openai": "^4.10.0",
     "pdf-parse": "^1.1.1",

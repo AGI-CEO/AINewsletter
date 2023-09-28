@@ -1,4 +1,5 @@
 const axios = require("axios");
+require("dotenv").config({ path: "../.env" });
 
 module.exports = async function sendNewsletter(summaries) {
   const newsletter = summaries

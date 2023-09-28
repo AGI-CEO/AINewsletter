@@ -26,7 +26,7 @@ module.exports = async function fetchPapers() {
 
     // Convert the link to the abstract page into a link to the PDF
     const pdflink = link.replace("/abs/", "/pdf/") + ".pdf";
-
+    console.log(pdflink);
     return { title, authors, summary, link, pdflink };
   });
 

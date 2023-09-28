@@ -1,76 +1,92 @@
 require("dotenv").config({ path: "../.env" });
-const openai = require("openai");
+const { OpenAI } = require("langchain/llms/openai");
+const { loadSummarizationChain } = require("langchain/chains");
+const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 const axios = require("axios");
 
-openai.apiKey = process.env.OPENAI_API_KEY;
+console.log(openai);
 
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 
 async function extractTextFromPdf(pdfLink) {
-  // Download the PDF file
-  const response = await axios({
-    url: pdfLink,
-    method: "GET",
-    responseType: "stream",
-  });
-
-  console.log(response.status);
-  console.log(response.headers);
+  let response;
+  try {
+    // Download the PDF file
+    response = await axios({
+      url: pdfLink,
+      method: "GET",
+      responseType: "stream",
+    });
+  } catch (error) {
+    console.error("Error downloading PDF:", error);
+    throw error;
+  }
 
   const pdfPath = "./temp.pdf";
   const writer = fs.createWriteStream(pdfPath);
   response.data.pipe(writer);
 
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     writer.on("finish", resolve);
     writer.on("error", reject);
-  })
-    .then(() => {
-      // Read the PDF file
-      const dataBuffer = fs.readFileSync(pdfPath);
+  });
 
-      // Extract text from the PDF file
-      return pdfParse(dataBuffer);
-    })
-    .then((data) => {
-      // Delete the temporary PDF file
-      fs.unlinkSync(pdfPath);
+  // Read the PDF file
+  const dataBuffer = fs.readFileSync(pdfPath);
 
-      // Return the extracted text
-      return data.text;
-    });
+  // Extract text from the PDF file
+  let data;
+  try {
+    data = await pdfParse(dataBuffer);
+  } catch (error) {
+    console.error("Error parsing PDF:", error);
+    throw error;
+  }
+
+  // Delete the temporary PDF file
+  fs.unlinkSync(pdfPath);
+
+  // Return the extracted text
+  return data.text;
 }
 
 module.exports = async function summarizePapers(papers) {
-  const summaries = await Promise.all(
-    papers.map(async (paper) => {
+  const summaries = [];
+  const model = new OpenAI({ temperature: 0 });
+  const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
+
+  for (const paper of papers) {
+    try {
       // Extract text from the PDF
       const pdfText = await extractTextFromPdf(paper.pdflink);
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo-16k",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are an expert educator that excels at summarizing complex AI subjects in a way that an average adult who's been following AI news would understand. The user will respond with the text contents of a research paper and you will only return a summary.",
-          },
-          {
-            role: "user",
-            content: pdfText,
-          },
-        ],
-        max_tokens: 7900,
+      // Create documents from the PDF text
+      const docs = await textSplitter.createDocuments([pdfText]);
+
+      // Load the summarization chain
+      const chain = loadSummarizationChain(model, { type: "map_reduce" });
+
+      // Call the summarization chain
+      const res = await chain.call({
+        input_documents: docs,
       });
-      return {
+
+      summaries.push({
         title: paper.title,
         authors: paper.authors,
-        AIsummary: response.choices[0].message.content,
+        AIsummary: res.text,
         link: paper.link,
         pdflink: paper.pdflink,
-      };
-    })
-  );
+      });
+    } catch (error) {
+      console.error(`Error processing paper ${paper.title}:`, error);
+      // You could push a placeholder summary here if you want
+    }
+  }
   return summaries;
+  console.log(summaries);
 };
