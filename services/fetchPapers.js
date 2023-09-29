@@ -25,7 +25,13 @@ module.exports = async function fetchPapers() {
     const link = entry.link.find((link) => link.$.rel === "alternate").$.href;
 
     // Convert the link to the abstract page into a link to the PDF
-    const pdflink = entry.link[0].$.href.replace("/abs/", "/pdf/") + ".pdf";
+    let pdflink = null;
+    if (entry.link[0].$.href.includes("arxiv.org/abs/")) {
+      pdflink = entry.link[0].$.href.replace("/abs/", "/pdf/") + ".pdf";
+    }
+
+    /*     console.log("ArXiv API entry:", entry); // Log the arXiv API entry
+    console.log("Generated pdflink:", pdflink); // Log the generated pdflink */
 
     return { title, authors, summary, link, pdflink };
   });
