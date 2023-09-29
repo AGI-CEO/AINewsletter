@@ -6,6 +6,7 @@ const fetchPapers = require("./services/fetchPapers");
 const summarizePapers = require("./services/summarizePapers");
 const sendNewsletter = require("./services/sendNewsletter");
 const subscribe = require("./routes/subscribe");
+const path = require("path");
 
 const app = express();
 
@@ -16,20 +17,6 @@ app.use(express.static("public"));
 
 app.use("/subscribe", subscribe);
 
-/* old subscribe endpoint
-app.post("/subscribe", (req, res) => {
-  const {
-    email,
-    utm_source = "AIResearcher",
-    utm_medium = "organic",
-    reactivate_existing = false,
-    send_welcome_email = true,
-    double_opt_override,
-  } = req.body;
-  res.status(200).send("Subscription successful");
-});
-*/
-
 app.get("/fetch-papers", async (req, res) => {
   try {
     const papers = await fetchPapers();
@@ -39,7 +26,6 @@ app.get("/fetch-papers", async (req, res) => {
   }
 });
 
-// Fetch, summarize and send newsletter every weekday at 8am Eastern Time
 cron.schedule(
   "0 8 * * 1-5",
   async () => {
@@ -56,7 +42,6 @@ app.get("/summarize-papers", async (req, res) => {
   try {
     const papers = await fetchPapers();
     await summarizePapers(papers, (summary) => {
-      // Send each summary as soon as it's available
       res.write(JSON.stringify(summary) + "\n");
     });
     res.end();
@@ -64,6 +49,10 @@ app.get("/summarize-papers", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to summarize papers" });
   }
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
 });
 
 const PORT = process.env.PORT || 5000;
