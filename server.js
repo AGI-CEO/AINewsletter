@@ -55,8 +55,11 @@ cron.schedule(
 app.get("/summarize-papers", async (req, res) => {
   try {
     const papers = await fetchPapers();
-    const summaries = await summarizePapers(papers);
-    res.json(summaries);
+    await summarizePapers(papers, (summary) => {
+      // Send each summary as soon as it's available
+      res.write(JSON.stringify(summary) + "\n");
+    });
+    res.end();
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to summarize papers" });
