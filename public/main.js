@@ -53,7 +53,10 @@ document
       });
 
       // Append the container to the body or another existing element
-      document.body.appendChild(papersContainer);
+      document.body.insertBefore(
+        papersContainer,
+        document.querySelector("footer")
+      );
     } catch (error) {
       console.error("Error fetching papers:", error);
     }
