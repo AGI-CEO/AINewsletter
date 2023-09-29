@@ -30,7 +30,10 @@ document
         const titleElement = document.createElement("h2");
         titleElement.textContent = paper.title;
         titleElement.className = "dark:text-white text-2xl mb-2";
+        titleElement.style.paddingBottom = "20px"; // Add more padding between the title and authors
+        titleElement.style.lineHeight = "1.5"; // Add more vertical spacing in the title element
         paperElement.appendChild(titleElement);
+        titleElement.style.fontSize = "3vw";
 
         const authorsElement = document.createElement("p");
         authorsElement.textContent = paper.authors.join(", ");
