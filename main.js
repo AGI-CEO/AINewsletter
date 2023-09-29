@@ -30,22 +30,26 @@ document
         const titleElement = document.createElement("h2");
         titleElement.textContent = paper.title;
         titleElement.className = "dark:text-white text-2xl mb-2"; // Add classes here
+        titleElement.style.fontSize = "3vw"; // Make the title responsive
         paperElement.appendChild(titleElement);
 
         const authorsElement = document.createElement("p");
         authorsElement.textContent = paper.authors.join(", ");
         authorsElement.className = "dark:text-gray-300 mb-4"; // Add classes here
+        authorsElement.style.fontSize = "2vw"; // Make the authors responsive
         paperElement.appendChild(authorsElement);
 
         const summaryElement = document.createElement("p");
         summaryElement.textContent = paper.summary;
         summaryElement.className = "dark:text-gray-300 mb-4"; // Add classes here
+        summaryElement.style.fontSize = "2vw"; // Make the summary responsive
         paperElement.appendChild(summaryElement);
 
         const linkElement = document.createElement("a");
         linkElement.href = paper.link;
         linkElement.textContent = "Read More";
         linkElement.className = "dark:text-blue-500 underline"; // Add classes here
+        linkElement.style.fontSize = "2vw"; // Make the link responsive
         paperElement.appendChild(linkElement);
 
         // Append the paper element to the parent container

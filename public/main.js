@@ -11,8 +11,8 @@ document
       const papersContainer = document.createElement("div");
       papersContainer.id = "papers-container";
       papersContainer.className = "dark:bg-gray-800 text-white mx-auto";
-      papersContainer.style.width = "50%";
-      papersContainer.style.minWidth = "800px";
+      papersContainer.style.width = "75vw";
+      papersContainer.style.minWidth = "50vw";
       papersContainer.style.margin = "0 auto";
 
       // Create a new element for each paper
@@ -25,27 +25,27 @@ document
         paperElement.id = `paper-${id}`; // Assign a unique id to each paper element
 
         paperElement.className =
-          "dark:bg-gray-700 text-white rounded-lg shadow-lg p-6 my-4 transform transition duration-500 ease-in-out hover:scale-105"; // Add classes here
+          "dark:bg-gray-700 text-white rounded-lg shadow-lg p-6 my-4 transform transition duration-500 ease-in-out hover:scale-105";
 
         const titleElement = document.createElement("h2");
         titleElement.textContent = paper.title;
-        titleElement.className = "dark:text-white text-2xl mb-2"; // Add classes here
+        titleElement.className = "dark:text-white text-2xl mb-2";
         paperElement.appendChild(titleElement);
 
         const authorsElement = document.createElement("p");
         authorsElement.textContent = paper.authors.join(", ");
-        authorsElement.className = "dark:text-gray-300 mb-4"; // Add classes here
+        authorsElement.className = "dark:text-gray-300 mb-4";
         paperElement.appendChild(authorsElement);
 
         const summaryElement = document.createElement("p");
         summaryElement.textContent = paper.summary;
-        summaryElement.className = "dark:text-gray-300 mb-4"; // Add classes here
+        summaryElement.className = "dark:text-gray-300 mb-4";
         paperElement.appendChild(summaryElement);
 
         const linkElement = document.createElement("a");
         linkElement.href = paper.link;
         linkElement.textContent = "Read More";
-        linkElement.className = "dark:text-blue-500 underline"; // Add classes here
+        linkElement.className = "dark:text-blue-500 underline";
         paperElement.appendChild(linkElement);
 
         // Append the paper element to the parent container
