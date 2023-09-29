@@ -94,6 +94,15 @@ document
 
       // Check if the paper element exists
       if (paperElement) {
+        // Create a new header for the AI summary
+        const AIsummaryHeader = document.createElement("h3");
+        AIsummaryHeader.textContent = "🤖 AI Summary";
+        AIsummaryHeader.className =
+          "dark:text-white text-xl mb-2 ai-summary-header";
+
+        // Append the AI summary header to the paper element
+        paperElement.appendChild(AIsummaryHeader);
+
         // Create a new element for the AI summary
         const AIsummaryElement = document.createElement("p");
         AIsummaryElement.textContent = summary.AIsummary;
