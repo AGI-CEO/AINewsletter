@@ -41,9 +41,18 @@ cron.schedule(
 app.get("/summarize-papers", async (req, res) => {
   try {
     const papers = await fetchPapers();
+
+    // Set the headers to create a Server-Sent Events connection
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
     await summarizePapers(papers, (summary) => {
-      res.write(JSON.stringify(summary) + "\n");
+      // Send the summary as a Server-Sent Event
+      res.write(`data: ${JSON.stringify(summary)}\n\n`);
     });
+
+    // End the response when all papers have been summarized
     res.end();
   } catch (error) {
     console.error(error);
