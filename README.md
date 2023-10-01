@@ -1,5 +1,8 @@
 # Your AI Research Newsletter
 
+![Demo](demo.gif)
+[View Demo](https://www.veed.io/view/51f4f367-fd12-4282-96a9-369f0c141826?panel=share)
+
 This project is an AI-based paper summarizer. It fetches AI-related papers from the arXiv API, parses the XML response to JSON, extracts necessary information from each paper, and constructs a PDF link for each paper.
 
 ## Dependencies
