@@ -28,9 +28,11 @@ The project uses several dependencies as listed in the package-lock.json file.
 
 To set up the project, you need to have Node.js installed. After cloning the repository, navigate to the project directory and run npm install to install the dependencies.
 
+Next, make a copy of the .env.template called '.env' and add your API keys. .env is on the git ignore
+
 ## Running the Project
 
-To run the project, use the command node server.js. The server will start and listen on port 5501.
+To run the project, use the command node server.js. The server will start and listen on port 5501 or whatever porpt you identify in the env file.
 
 ## License
 
